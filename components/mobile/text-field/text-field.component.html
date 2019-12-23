@@ -1,0 +1,37 @@
+<AbsoluteLayout
+    width="100%"
+    [class]="customClass"
+>
+    <TextField
+        #textField
+        width="100%"
+        [hint]="hint"
+        (textChange)="onTextChange($event)" 
+        [secure]="secure"
+        [required]="required"
+        [editable]="editable"
+        [keyboardType]="keyboardType"
+        [returnKeyType]="returnKeyType"
+        (returnPress)="returnPress.emit($event)"
+        [autocorrect]="autocorrect"
+        [maxLength]="maxLength || 255"
+        (focus)="textFieldFocus.emit($event)"
+        (blur)="textFieldBlur.emit($event)"
+        [class]="customTextFieldClass"
+    ></TextField>
+    <DockLayout
+        width="100%"
+        top="7"
+        stretchLastChild="false"
+    >
+        <StackLayout dock="right">
+            <core-ui-icon
+                [name]="icon"
+                size="20"
+                [color]="iconColor"
+                (tapAction)="iconTapAction.emit($event)"
+            >
+            </core-ui-icon>
+        </StackLayout>
+    </DockLayout>
+</AbsoluteLayout>

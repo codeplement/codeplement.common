@@ -1,0 +1,169 @@
+<ScrollView backgroundColor="#eee">
+    <FlexboxLayout
+        flexDirection="column"
+        class="sign-in-block"
+        backgroundColor="#eee"
+        maxWidth="400"
+    >
+        <AbsoluteLayout class="logo-container">
+
+            <FlexboxLayout
+                flexDirection="column"
+                width="100%"
+                padding="0"
+            >
+                <StackLayout
+                    height="48"
+                    padding="10,0,0,10"
+                    [visibility]="isNextStep ? 'visible' : 'hidden'"
+                >
+                    <core-ui-icon
+                        name="arrow_back"
+                        color="white"
+                        (tapAction)="previousStep()"
+                    >
+                    </core-ui-icon>
+                </StackLayout>
+                <Image
+                    alignSelf="center"
+                    src="~/assets/logo_transparent.png"
+                    stretch="none"
+                    margin="0,0,40,0"
+                ></Image>
+
+            </FlexboxLayout>
+            <!-- <Progress
+                value="100"
+                maxValue="100"
+                #loader
+                width="100%"
+                top="200"
+                margin="0"
+                class="progress-accent"
+            >
+            </Progress> -->
+            <LinearProgressBar
+                width="100%"
+                top="200"
+                #loader
+                barColor="#E865B5"
+                [indeterminate]="loaderActive"
+            >
+            </LinearProgressBar>
+        </AbsoluteLayout>
+        <StackLayout
+            #stack
+            padding="0"
+            margin="-7,0,0,0"
+        >
+            <CardView
+                class="cardStyle"
+                margin="0,0,10,0"
+                elevation="10"
+                radius="1"
+            >
+                <StackLayout>
+                    <StackLayout
+                        [visibility]="!isNextStep ? 'visible' : 'collapse'"
+                        class="m-15"
+                    >
+                        <Label
+                            text="Se connecter"
+                            class="h1"
+                        ></Label>
+                        <Label
+                            text="Vos processus entreprise en un seul compte"
+                            class="h5"
+                        ></Label>
+
+                    </StackLayout>
+                    <StackLayout
+                        [visibility]="isNextStep ? 'visible' : 'collapse'"
+                        class="m-15"
+                    >
+                        <Label
+                            text="Bienvenue"
+                            class="h1"
+                        ></Label>
+                        <StackLayout orientation="horizontal">
+                            <Image
+                                width="32"
+                                height="32"
+                                [src]="user.image"
+                                margin="0,10,0,0"
+                                alignSelf="center"
+                                class="rounded-circle"
+                            ></Image>
+                            <Label
+                                [text]="user.name"
+                                class="h2"
+                                alignSelf="center"
+                            ></Label>
+                        </StackLayout>
+
+                    </StackLayout>
+                    <StackLayout class="m-15">
+
+                        <ng-container *ngIf="!isNextStep; else elseTemplate">
+                            <TextField
+                                hint="Identifiant"
+                                keyboardType="email"
+                                required
+                                [editable]="!formDisabled"
+                                returnKeyType="done"
+                                [(ngModel)]="username"
+                                (returnPress)="onReturnPress($event)"
+                                [visibility]="!isNextStep ? 'visible' : 'collapse'"
+                                autocorrect="false"
+                                class="m-b-20 m-t-10"
+                            ></TextField>
+
+                        </ng-container>
+                        <ng-template #elseTemplate>
+                            <core-ui-tf
+                                hint="Mot de passe"
+                                [(ngModel)]="password"
+                                [secure]="!viewPassword"
+                                required="true"
+                                [editable]="!formDisabled"
+                                returnKeyType="done"
+                                (returnPress)="onReturnPress($event)"
+                                autocorrect="false"
+                                customClass="m-b-20 m-t-10"
+                                [icon]="viewPassword ? 'visibility_off': 'visibility'"
+                                (iconTapAction)="viewPassword = !viewPassword"
+                            ></core-ui-tf>
+
+                        </ng-template>
+
+                        <Button
+                            class="submit btn btn-primary"
+                            height="64"
+                            margin="0"
+                            [disbaled]="formDisabled"
+                            [text]="isNextStep ? 'Se connecter' : 'Suivant'"
+                            (tap)="nextStep()"
+                        ></Button>
+                        <StackLayout
+                            orientation="horizontal"
+                            class="m-t-10"
+                        >
+                            <core-ui-icon
+                                name="live_help"
+                                backColor="primary"
+                            >
+                            </core-ui-icon>
+                            <Label
+                                text="Besoin d'aide"
+                                class="text-primary-dark"
+                                textWrap="true"
+                            ></Label>
+                        </StackLayout>
+
+                    </StackLayout>
+                </StackLayout>
+            </CardView>
+            <core-ui-auth-mco [showSignUpButton]="!isNextStep"></core-ui-auth-mco>
+        </StackLayout>
+    </FlexboxLayout>
+</ScrollView>

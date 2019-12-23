@@ -1,0 +1,145 @@
+<div
+    fxLayout="row"
+    class="w-100 pt-4 pt-xs-0 h-xs-auto sign-in-block"
+    fxLayoutAlign.gt-xs="center center"
+>
+    <div
+        fxFlex
+        class="content"
+    >
+        <mat-card class="rounded-0">
+
+            <div
+                class="logo-container"
+                mat-card-image
+                fxLayout="row"
+                fxLayoutAlign="center center"
+            >
+                <img
+                    src="assets/logo_transparent.png"
+                    alt="logo"
+                >
+            </div>
+            <button
+                mat-icon-button
+                aria-label="back"
+                class="back-btn"
+                *ngIf="isNextStep"
+                (click)="previousStep()"
+            >
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            <mat-progress-bar
+                [mode]="'determinate'"
+                color="accent"
+                value="100"
+                #loader
+                class="loader"
+                fxHide.gt-sm=true
+            ></mat-progress-bar>
+            <mat-card-content>
+                <form
+                    #f="ngForm"
+                    (ngSubmit)="nextStep(f)"
+                    class="max-content"
+                    fxLayout="column"
+                    fxLayoutAlign="start start"
+                >
+                    <ng-container *ngIf="!isNextStep; else elseTemplate">
+                        <h1 class="mat-h1">Se connecter</h1>
+                        <h5 class="line-36 mb-2">Vos processus entreprise en un seul compte</h5>
+                    </ng-container>
+                    <ng-template #elseTemplate>
+                        <h1 class="mat-h1">Bienvenue</h1>
+                        <div
+                            fxLayout="row"
+                            fxLayoutAlign="center center"
+                            fxLayoutGap="16px"
+                            class="height-36  mb-2"
+                        >
+                            <img
+                                [src]="user.image"
+                                [alt]="user.name"
+                                class="icon-32 rounded-circle"
+                            >
+                            <h2>{{user.name}}</h2>
+
+                        </div>
+                    </ng-template>
+
+                    <mat-form-field
+                        class="w-100"
+                        *ngIf="!isNextStep"
+                    >
+                        <input
+                            type="text"
+                            #identifiant
+                            [required]="!isNextStep"
+                            matInput
+                            placeholder="Identifiant"
+                            [(ngModel)]="username"
+                            name="username"
+                            pattern="^[a-z0-9@._-]{3,20}"
+                            (keyup.enter)="onReturnPress($event, f)"
+                        >
+                    </mat-form-field>
+                    <mat-form-field
+                        class="w-100"
+                        *ngIf="isNextStep"
+                    >
+                        <input
+                            matInput
+                            [required]="isNextStep"
+                            #passwordRef
+                            [type]="viewPassword ? 'text': 'password'"
+                            placeholder="Mot de passe"
+                            [(ngModel)]="password"
+                            name="password"
+                            pattern="\S+.*"
+                            (keyup.enter)="onReturnPress($event, f)"
+                        >
+                        <a
+                            mat-button
+                            matSuffix
+                            mat-icon-button
+                            aria-label="Show password"
+                            (mousedown)="viewPassword = !viewPassword"
+                            (mouseup)="viewPassword = !viewPassword"
+                            (press)="viewPassword = !viewPassword"
+                            (pressup)="viewPassword = !viewPassword"
+                        >
+                            <mat-icon>{{viewPassword ? 'visibility_off': 'visibility'}}</mat-icon>
+                        </a>
+                    </mat-form-field>
+                    <button
+                        mat-button
+                        mat-raised-button
+                        type="submit"
+                        color=primary
+                        [disabled]=formDisabled
+                        class="submit-btn w-100 btn-48 rounded-0"
+                    >{{isNextStep ? 'Se connecter' : 'Suivant'}}</button>
+                    <div
+                        fxLayout="row"
+                        class="mb-2 w-100"
+                        fxLayoutAlign="space-between"
+                    >
+
+                        <mat-slide-toggle color="primary">se souvenir de moi</mat-slide-toggle>
+                        <a
+                            aria-label="help"
+                            color="primary"
+                            class="text-primary-dark help"
+                        >
+                            <mat-icon>live_help</mat-icon> Besoin d'aide
+                        </a>
+
+                    </div>
+                </form>
+            </mat-card-content>
+            <mat-card-actions>
+            </mat-card-actions>
+        </mat-card>
+        <core-ui-auth-mco [showSignUpButton]="!isNextStep"></core-ui-auth-mco>
+    </div>
+</div>

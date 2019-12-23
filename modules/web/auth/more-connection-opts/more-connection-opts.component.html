@@ -1,0 +1,50 @@
+<div
+    fxLayout="column"
+    class="w-100 more-con-opts"
+    fxLayoutAlign="center center"
+>
+    <button
+        [fxShow]="showSignUpButton"
+        mat-raised-button
+        class="mt-4 w-100 btn-48 rounded-0"
+    >S'INSCRIRE</button>
+    <div
+        fxLayout="row"
+        fxLayoutAlign="center center"
+        class="or-container w-100 mt-4"
+        fxLayoutGap="8px"
+    >
+        <span
+            fxFlex="40%"
+            class="line line-left"
+        ></span>
+        <span class="or-text">OU</span>
+        <span
+            fxFlex="40%"
+            class="line line-right"
+        ></span>
+    </div>
+    <span class="connect-with my-3">se connecter avec votre compte: </span>
+    <div
+        fxLayout="row"
+        alignItems="stretch"
+        fxLayoutAlign="center center"
+        class="w-100 mb-4"
+        fxLayoutGap="8px"
+    >
+        <a
+            mat-icon-button
+            [tooltip]="social.name"
+            (tap)="testSocial(social)"
+            *ngFor="let social of socialiteAuths"
+            class="social-img"
+        >
+            <img
+                [src]="social.logo"
+                class="social-img"
+                width="20"
+            >
+        </a>
+
+    </div>
+</div>

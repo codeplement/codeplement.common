@@ -1,0 +1,59 @@
+<StackLayout class="more-con-opts">
+    <label margin="20,0,-10,0"></label>
+    <CardView
+        class="cardStyle"
+        margin="-10,-10,10, -10"
+        elevation="10"
+        radius="1"
+        ripple="true"
+        [visibility]="showSignUpButton ? 'visible' : 'collapse'"
+    >
+        <Button
+            class="bg-white btn-sign-up"
+            height="64"
+            text="S'INSCRIRE"
+        ></Button>
+
+    </CardView>
+    <StackLayout orientation="vertical">
+        <FlexboxLayout
+            flexDirection="row"
+            alignItems="stretch"
+            alignItems="center"
+            justifyContent="center"
+            class="or-container"
+        >
+            <label class="line line-left"></label>
+            <label
+                text="OU"
+                class="or-text"
+            ></label>
+            <label class="line line-right"></label>
+        </FlexboxLayout>
+        <Label
+            class="connect-with"
+            margin="10,0,10,0"
+            text="se connecter avec votre compte: "
+            textWrap="true"
+        ></Label>
+        <FlexboxLayout
+            margin="0,0,10,0"
+            flexDirection="row"
+            width="100%"
+            alignItems="stretch"
+            alignItems="center"
+            justifyContent="center"
+        >
+            <Image
+                (tap)="testSocial(social)"
+                *ngFor="let social of socialiteAuths"
+                [src]="'~/' + social.logo"
+                class="social-img"
+                width="25"
+                margin="10,15"
+                [tooltip]="social.name"
+            ></Image>
+
+        </FlexboxLayout>
+    </StackLayout>
+</StackLayout>

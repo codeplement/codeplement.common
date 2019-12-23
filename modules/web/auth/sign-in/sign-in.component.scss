@@ -1,0 +1,71 @@
+.sign-in-block {
+
+    .content {
+        max-width: 420px;
+
+        .max-content {
+            // width: 288px;
+        }
+
+        .back-btn {
+            position: absolute;
+            color: white;
+            top: 8px;
+            left: 4px;
+        }
+
+        .logo-container {
+            height: 150px;
+            background: linear-gradient(rgba(57, 84, 180, 0.76), rgba(57, 84, 180, 0.76)), url(~/assets/back_material.png);
+            background-size: cover;
+
+            img {
+                width: 128px;
+            }
+        }
+
+        h1 {
+            font-weight: 100;
+        }
+
+        h5,
+        h2 {
+            margin: 0;
+            font-weight: 100;
+        }
+
+        .line-36 {
+            line-height: 36px;
+        }
+
+        .height-36 {
+            height: 36px;
+        }
+
+        mat-form-field mat-icon {
+            font-size: 1.0rem;
+            color: #5a5a5a;
+        }
+
+        .submit-btn {
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .help {
+            line-height: 24px;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+
+            mat-icon {
+                margin-right: 4px;
+            }
+        }
+
+        .loader {
+            margin: -16px -16px 16px -16px;
+            width: calc(32px + 100%);
+        }
+    }
+}
