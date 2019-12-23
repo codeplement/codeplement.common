@@ -1,13 +1,16 @@
-export class ObservableArray<T>{
+import { SelectionSortFunction, QuickSortFunction } from './sort-functions';
+
+export class ObservableArray<T> {
     [n: number]: T;
-    [x: string]: any;
     private array: T[] = [];
     private handlers: any = {
         itemadded: [],
         itemremoved: [],
-        itemset: []
+        itemset: [],
+        indexchanged: [],
+        itemmoved: []
     };
-    constructor() {
+    constructor(...items: T[]) {
         Object.getOwnPropertyNames(Array.prototype).forEach((name) => {
             if (!(name in this)) {
                 Object.defineProperty(this, name, {
@@ -18,23 +21,19 @@ export class ObservableArray<T>{
                 });
             }
         });
-
+        this.push(...items);
+    }
+    [Symbol.iterator]() {
+        console.log(this.array[Symbol.iterator]());
+        return this.array[Symbol.iterator]();
     }
     addEventListener(eventName: string,
-        handler: (event: {
-            type: 'itemset' | 'itemremoved' | 'itemremoved',
-            index: number,
-            item: T
-        }) => {}) {
+        handler: (event: ObservableArrayEvent<T>) => void) {
         eventName = ('' + eventName).toLowerCase();
         this.handlers[eventName].push(handler);
     }
     removeEventListner(eventName: string,
-        handler: (event: {
-            type: 'itemset' | 'itemremoved' | 'itemremoved',
-            index: number,
-            item: T
-        }) => {}) {
+        handler: (event: ObservableArrayEvent<T>) => void) {
         eventName = ('' + eventName).toLowerCase();
 
         let h = this.handlers[eventName];
@@ -50,6 +49,7 @@ export class ObservableArray<T>{
         let index: number;
         for (let i = 0, ln = items.length; i < ln; i++) {
             index = this.array.length;
+            items[i]['hash'] = Date.now().toString();
             this.array.push(items[i]);
             this.defineIndexProperty(index);
             this.raiseEvent({
@@ -85,7 +85,7 @@ export class ObservableArray<T>{
         }
         for (let i = 0; i < this.array.length; i++) {
             this.raiseEvent({
-                type: 'itemset',
+                type: 'indexchanged',
                 index: i,
                 item: this.array[i]
             });
@@ -105,7 +105,23 @@ export class ObservableArray<T>{
             return item;
         }
     }
+    spliceMiltiple(indices: number[]) {
+        const removed = [];
+        let item: any;
+        indices = indices.sort((a, b) => b - a);
 
+        for (let i = 0; i < indices.length; i++) {
+            item = this.array.splice(indices[i], 1);
+            removed.push(item);
+            delete this[this.array.length]; // removing the index property on the instance
+            this.raiseEvent({
+                type: 'itemremoved',
+                index: i,
+                item: item[0]
+            });
+        }
+        return removed;
+    }
     splice(index?: number, deleteCount?: number, ...items: T[]): T[] {
         let removed = [],
             item: any,
@@ -114,6 +130,7 @@ export class ObservableArray<T>{
         index = index == null ? 0 : index < 0 ? this.array.length + index : index;
 
         deleteCount = deleteCount == null ? this.array.length - index : deleteCount > 0 ? deleteCount : 0;
+        console.log('splice');
 
         while (deleteCount--) {
             item = this.array.splice(index, 1)[0];
@@ -139,6 +156,48 @@ export class ObservableArray<T>{
 
         return removed;
     }
+    sort(compareFn: (current: T, next: T) => boolean, asc = true) {
+        // const sortFn = asc ? compareFn :
+        // (current: T, next: T) => !compareFn(current, next);
+
+        if (this.array.length < 500) {
+            SelectionSortFunction.sort(this.array, this.swap.bind(this), compareFn);
+        } else {
+            QuickSortFunction.sort(this.array, this.swap.bind(this), compareFn);
+        }
+    }
+
+    private swap(index1: number, index2: number) {
+        const temp = this.array[index2];
+        this.array[index2] = this.array[index1];
+        this.array[index1] = temp;
+        this.raiseEvent({
+            index: index2,
+            item: this.array[index2],
+            type: 'itemmoved',
+            siblingHash: this.array[index1]['hash'],
+            sibling: this.array[index1],
+            oldIndex: index1
+        });
+    }
+
+    move(old_index: number, new_index: number) {
+        const arr = this.array;
+        while (old_index < 0) {
+            old_index += arr.length;
+        }
+        while (new_index < 0) {
+            new_index += arr.length;
+        }
+        if (new_index >= arr.length) {
+            let k = new_index - arr.length + 1;
+            while (k--) {
+                arr.push(undefined);
+            }
+        }
+        arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    }
+
     get length() {
         return this.array.length;
     }
@@ -176,11 +235,19 @@ export class ObservableArray<T>{
             });
         }
     }
-    private raiseEvent(event: { type: string | number | symbol; index?: string | number | symbol; item?: T; }) {
+    private raiseEvent(event: ObservableArrayEvent<T>) {
         const _self = this;
         this.handlers[event.type].forEach(function (h: { call: (arg0: any, arg1: any) => void; }) {
             h.call(_self, event);
         });
     }
+}
 
+export interface ObservableArrayEvent<T> {
+    type: 'itemset' | 'itemremoved' | 'itemadded' | 'indexchanged' | 'itemmoved';
+    index: number;
+    oldIndex?: number;
+    siblingHash?: string;
+    sibling?: T;
+    item: T;
 }
