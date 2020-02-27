@@ -7,7 +7,7 @@ import {
 } from '@angular/common/http';
 import { JwtHelperService } from '@root/services';
 import { APP_CONFIG, IAppConfig } from '@root/config/app.config';
-import { Observable, from } from "rxjs";
+import { Observable, from } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { parse } from 'url';
 import { AuthService } from '@root/services';
@@ -75,7 +75,7 @@ export class JwtInterceptor implements HttpInterceptor {
         request: HttpRequest<any>,
         next: HttpHandler
     ): Observable<HttpEvent<any>> {
-        let tokenIsExpired: boolean = false;
+        let tokenIsExpired = false;
 
         if (!token && this.throwNoTokenError) {
             throw new Error('Could not get token from tokenGetter function.');

@@ -3,14 +3,14 @@ export const QuickSortFunction = new class <T> {
     swapFn: (v1: number, v2: number) => void;
     compareFn: (current: T, next: T) => boolean;
 
-    sort (aList: T[], swapFun: (v1: number, v2: number) => void, compareFn: (current: T, next: T) => boolean) {
+    sort(aList: T[], swapFun: (v1: number, v2: number) => void, compareFn: (current: T, next: T) => boolean) {
         this.aList = aList;
         this.swapFn = swapFun;
         this.compareFn = compareFn;
         this.quickSort(0, this.aList.length - 1);
         return this.aList;
     }
-    private quickSort (left: number, right: number) {
+    private quickSort(left: number, right: number) {
         if (right - left <= 0) {
             return;
         } else {
@@ -21,7 +21,7 @@ export const QuickSortFunction = new class <T> {
         }
     }
 
-    private partition (left: number, right: number, pivot) {
+    private partition(left: number, right: number, pivot) {
         let leftmark = left - 1;
         let rightmark = right;
         while (true) {
@@ -44,14 +44,14 @@ export const SelectionSortFunction = new class <T> {
     swapFn: (v1: number, v2: number) => void;
     compareFn: (current: T, next: T) => boolean;
 
-    sort (aList: T[], swapFun: (v1: number, v2: number) => void, compareFn: (current: T, next: T) => boolean) {
+    sort(aList: T[], swapFun: (v1: number, v2: number) => void, compareFn: (current: T, next: T) => boolean) {
         this.aList = aList;
         this.swapFn = swapFun;
         this.compareFn = compareFn;
         this.selectionSort();
         return this.aList;
     }
-    private selectionSort () {
+    private selectionSort() {
         let min;
         for (let outer = 0; outer <= this.aList.length - 2; outer++) {
             min = outer;

@@ -9,8 +9,8 @@ export interface IAuthorization {
     blackListedRoutes: (RegExp | string)[];
     authorizationHeaderName: string;
     authorizationScheme: string;
-    throwNoTokenError: boolean,
-    skipWhenExpired: boolean
+    throwNoTokenError: boolean;
+    skipWhenExpired: boolean;
 }
 export interface IAppConfig {
     license: string;
@@ -21,7 +21,7 @@ export interface IAppConfig {
     };
     cacheConfig: {
         unCachableRoutes: (RegExp | string)[];
-    }
+    };
 }
 
 export const AppConfig: IAppConfig = appConfig;

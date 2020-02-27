@@ -1,5 +1,6 @@
 import { IconComponent } from './icon.component';
 import { NativeScriptCommonModule } from 'nativescript-angular/common';
+import { NativeScriptUISideDrawerModule } from 'nativescript-ui-sidedrawer/angular';
 import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { registerElement } from 'nativescript-angular/element-registry';
@@ -11,9 +12,14 @@ registerElement('CardView', () => CardView);
 registerElement('LinearProgressBar', () => Linearprogressbar);
 
 @NgModule({
-    imports: [NativeScriptCommonModule],
-    declarations: [IconComponent, TextFieldComponent],
-    exports: [IconComponent, TextFieldComponent, NativeScriptCommonModule],
-    schemas: [NO_ERRORS_SCHEMA]
+  imports: [NativeScriptCommonModule, NativeScriptUISideDrawerModule],
+  declarations: [IconComponent, TextFieldComponent],
+  exports: [
+    IconComponent,
+    TextFieldComponent,
+    NativeScriptCommonModule,
+    NativeScriptUISideDrawerModule
+  ],
+  schemas: [NO_ERRORS_SCHEMA]
 })
-export class CoreComponentsModule { }
+export class CoreComponentsModule {}

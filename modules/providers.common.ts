@@ -21,4 +21,4 @@ export const CommonProviders = [
         multi: true
     },
     { provide: APP_CONFIG, useValue: AppConfig }
-]
+];

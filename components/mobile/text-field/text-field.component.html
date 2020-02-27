@@ -1,37 +1,61 @@
-<AbsoluteLayout
-    width="100%"
-    [class]="customClass"
+<StackLayout
+  width="100%"
+  [class]="customClass"
+  orientation="horizontal"
+  horizontalAlignment="left"
 >
-    <TextField
-        #textField
-        width="100%"
-        [hint]="hint"
-        (textChange)="onTextChange($event)" 
-        [secure]="secure"
-        [required]="required"
-        [editable]="editable"
-        [keyboardType]="keyboardType"
-        [returnKeyType]="returnKeyType"
-        (returnPress)="returnPress.emit($event)"
-        [autocorrect]="autocorrect"
-        [maxLength]="maxLength || 255"
-        (focus)="textFieldFocus.emit($event)"
-        (blur)="textFieldBlur.emit($event)"
-        [class]="customTextFieldClass"
-    ></TextField>
-    <DockLayout
-        width="100%"
-        top="7"
-        stretchLastChild="false"
+  <DockLayout
+    width="100%"
+    horizontalAlignment="left"
+    verticalAlignment="center"
+  >
+    <StackLayout
+      dock="left"
+      class="p-l-5"
+      *ngIf="iconPrefix"
+      verticalAlignment="center"
+      horizontalAlignment="center"
     >
-        <StackLayout dock="right">
-            <core-ui-icon
-                [name]="icon"
-                size="20"
-                [color]="iconColor"
-                (tapAction)="iconTapAction.emit($event)"
-            >
-            </core-ui-icon>
-        </StackLayout>
-    </DockLayout>
-</AbsoluteLayout>
+      <core-ui-icon
+        [name]="iconPrefix"
+        size="20"
+        [color]="iconColor"
+        (tapAction)="iconPrefixTapAction?.emit($event)"
+      >
+      </core-ui-icon>
+    </StackLayout>
+    <TextField
+      horizontalAlignment="left"
+      #textField
+      width="80%"
+      dock="left"
+      [hint]="hint"
+      (textChange)="onTextChange($event)"
+      [secure]="secure"
+      [required]="required"
+      [editable]="editable"
+      [keyboardType]="keyboardType"
+      [returnKeyType]="returnKeyType"
+      (returnPress)="returnPress.emit($event)"
+      [autocorrect]="autocorrect"
+      [maxLength]="maxLength || 255"
+      (focus)="textFieldFocus.emit($event)"
+      (blur)="textFieldBlur.emit($event)"
+      [class]="customTextFieldClass"
+    ></TextField>
+    <StackLayout
+      dock="right"
+      *ngIf="iconSuffix"
+      verticalAlignment="center"
+      horizontalAlignment="center"
+    >
+      <core-ui-icon
+        [name]="iconSuffix"
+        size="20"
+        [color]="iconColor"
+        (tapAction)="iconSuffixTapAction?.emit($event)"
+      >
+      </core-ui-icon>
+    </StackLayout>
+  </DockLayout>
+</StackLayout>
