@@ -2,30 +2,32 @@ import { Injectable } from '@angular/core';
 import { Subject, PartialObserver } from 'rxjs';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class GenericSubjects {
-    private subjects$: {
-        [x: string]: Subject<any>;
-    };
-    constructor() { }
+  private subjects$: {
+    [x: string]: Subject<any>;
+  } = {};
+  constructor() {}
 
-    public get<T>(name: string): Subject<T> {
-        const sub = this.subjects$[name] as Subject<T>;
-        if (!sub) {
-            throw new Error('Subject not registered');
-        }
-        return sub;
+  public get<T>(name: string, registerIfNotExist = false): Subject<T> {
+    const sub = this.subjects$[name] as Subject<T>;
+    if (!sub && !registerIfNotExist) {
+      throw new Error(`Subject not registered : ${name}`);
+    } else if (!sub && registerIfNotExist) {
+      return this.add(name);
     }
+    return sub;
+  }
 
-    add<T>(name: string): Subject<T> {
-        this.subjects$[name] = this.subjects$[name] || new Subject<T>();
-        return this.subjects$[name] as Subject<T>;
-    }
+  public add<T>(name: string): Subject<T> {
+    this.subjects$[name] = this.subjects$[name] || new Subject<T>();
+    return this.subjects$[name] as Subject<T>;
+  }
 
-    registerCommonSubjects(): void {
-        this.add<boolean>('authenticationStatus$');
-        this.add<boolean>('onlineStatus$');
-        this.add<boolean>('noDataFoundStatus$');
-    }
+  registerCommonSubjects(): void {
+    this.add<boolean>('authenticationStatus$');
+    this.add<boolean>('onlineStatus$');
+    this.add<boolean>('noDataFoundStatus$');
+  }
 }

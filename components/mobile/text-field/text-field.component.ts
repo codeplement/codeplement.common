@@ -28,7 +28,7 @@ import { ContentView } from 'tns-core-modules/ui/content-view';
 })
 export class TextFieldComponent implements ControlValueAccessor {
   private text = '';
-  @ViewChild('textField', { static: true }) textField: ElementRef<ContentView>;
+  @ViewChild('textField', { static: true }) textField: ElementRef<TextField>;
 
   @Input() iconSuffix: string;
   @Input() iconPrefix: string;
@@ -59,17 +59,20 @@ export class TextFieldComponent implements ControlValueAccessor {
   @Output() returnPress = new EventEmitter<any>();
   @Output() textFieldFocus = new EventEmitter<any>();
   @Output() textFieldBlur = new EventEmitter<any>();
-  propagateChange = (_: any) => {};
+  propagateChange(value) {
+    this.textField.nativeElement.text = value;
+  }
   constructor() {}
 
   onTextChange(args) {
     const textField = args.object as TextField;
-    console.log(textField.text);
     this.textValue = textField.text;
   }
   writeValue(obj: any): void {
-    if (obj !== undefined) {
+    if (typeof obj !== 'undefined') {
       this.textValue = obj as string;
+    } else {
+      this.textValue = null;
     }
   }
   registerOnChange(fn: any): void {

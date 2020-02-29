@@ -1,32 +1,31 @@
-import {
-    InjectionToken
-} from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { IEndPoint } from './endpoint';
 import appConfig from '@root/../../app.config.json';
 
 export interface IAuthorization {
-    authorisedDomains: (RegExp | string)[];
-    blackListedRoutes: (RegExp | string)[];
-    authorizationHeaderName: string;
-    authorizationScheme: string;
-    throwNoTokenError: boolean;
-    skipWhenExpired: boolean;
+  appDomains: (RegExp | string)[];
+  anonymousRoutes: (RegExp | string)[];
+  authorizationHeaderName: string;
+  authorizationScheme: string;
+  throwNoTokenError: boolean;
+  continueIfTokenExpired: boolean;
+  getToken?: () => string | null | Promise<string | null>;
 }
 export interface IAppConfig {
-    license: string;
-    version: string;
-    authorization: IAuthorization;
-    apiEndpoints: {
-        [x: string]: IEndPoint;
-    };
-    cacheConfig: {
-        unCachableRoutes: (RegExp | string)[];
-    };
+  license: string;
+  version: string;
+  authorization: IAuthorization;
+  apiEndpoints: {
+    [x: string]: IEndPoint;
+  };
+  cacheConfig: {
+    unCachableRoutes: (RegExp | string)[];
+  };
 }
 
 export const AppConfig: IAppConfig = appConfig;
 
 export let APP_CONFIG = new InjectionToken<IAppConfig>('app.config', {
-    providedIn: 'root',
-    factory: () => AppConfig
+  providedIn: 'root',
+  factory: () => AppConfig
 });

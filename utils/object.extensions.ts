@@ -1,13 +1,13 @@
 declare global {
-    interface Object {
-        // throwIfNullOrUndefined(message: string): void;
-    }
+  interface Object {
+    // throwIfNullOrUndefined(message: string): void;
+    clone(): Object;
+  }
 }
 
-// Object.prototype.throwIfNullOrUndefined = (message: string) => {
-//     if (this == null) {
-//         throw new Error(message);
-//     }
-// };
+Object.prototype.clone = function() {
+  return Object.assign({}, this);
+};
 
-export { };
+
+export {};
