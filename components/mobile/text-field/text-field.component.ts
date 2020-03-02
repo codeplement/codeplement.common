@@ -13,7 +13,6 @@ import {
   ReturnKeyType
 } from 'tns-core-modules/ui/editable-text-base';
 import { TextField } from 'tns-core-modules/ui/text-field';
-import { ContentView } from 'tns-core-modules/ui/content-view';
 @Component({
   providers: [
     {
@@ -60,7 +59,7 @@ export class TextFieldComponent implements ControlValueAccessor {
   @Output() textFieldFocus = new EventEmitter<any>();
   @Output() textFieldBlur = new EventEmitter<any>();
   propagateChange(value) {
-    this.textField.nativeElement.text = value;
+    // this.textField.nativeElement.text = value;
   }
   constructor() {}
 
@@ -73,6 +72,7 @@ export class TextFieldComponent implements ControlValueAccessor {
       this.textValue = obj as string;
     } else {
       this.textValue = null;
+      this.textField.nativeElement.text = null;
     }
   }
   registerOnChange(fn: any): void {

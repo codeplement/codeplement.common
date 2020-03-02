@@ -1,29 +1,25 @@
 import { IconComponent } from './icon.component';
 import { NativeScriptCommonModule } from 'nativescript-angular/common';
 import { NativeScriptUISideDrawerModule } from 'nativescript-ui-sidedrawer/angular';
-import { NgModule } from '@angular/core';
-import { NativeScriptMaterialCardViewModule } from 'nativescript-material-cardview/angular';
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { registerElement } from 'nativescript-angular/element-registry';
 import { Linearprogressbar } from 'nativescript-linearprogressbar';
+import { CardView } from 'nativescript-cardview';
 import { TextFieldComponent } from './text-field/text-field.component';
 
 registerElement('LinearProgressBar', () => Linearprogressbar);
+registerElement('CardView', () => CardView);
 
 @NgModule({
-  imports: [
-    NativeScriptCommonModule,
-    NativeScriptUISideDrawerModule,
-    NativeScriptMaterialCardViewModule
-  ],
+  imports: [NativeScriptCommonModule, NativeScriptUISideDrawerModule],
   declarations: [IconComponent, TextFieldComponent],
   exports: [
     IconComponent,
     TextFieldComponent,
     NativeScriptCommonModule,
-    NativeScriptUISideDrawerModule,
-    NativeScriptMaterialCardViewModule
+    NativeScriptUISideDrawerModule
   ],
-  schemas: []
+  schemas: [NO_ERRORS_SCHEMA]
 })
 export class CoreComponentsModule {}

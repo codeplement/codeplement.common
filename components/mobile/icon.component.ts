@@ -15,7 +15,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
       [horizontalAlignment]="horizontalAlignment"
       (tap)="launchEvent($event)"
       [class]="customStyle + ' ' + customClass + ' mdi m-l-2 m-r-2'"
-      style="font-color:{{ color }};font-size:{{ size }}px;"
+      [style]="getStyle()"
       [text]="name"
     >
     </Label>
@@ -23,8 +23,9 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class IconComponent {
   public customStyle: string;
-  public color: string;
+  public color = '';
   @Input() name: string;
+  @Input() rotate = 0;
   @Input() customClass: string;
   @Input() horizontalAlignment = 'center';
   @Input() verticalAlignment = 'center';
@@ -43,5 +44,8 @@ export class IconComponent {
   constructor() {}
   launchEvent($event) {
     this.tapAction.emit($event);
+  }
+  getStyle() {
+    return `font-color:${this.color};font-size:${this.size}px;transform: rotate(${this.rotate}deg)`;
   }
 }
