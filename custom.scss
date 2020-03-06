@@ -17,9 +17,11 @@ $border-color-light: rgba(192, 192, 192, 0.664);
 .rounded-circle {
   border-radius: 50%;
 }
+
 .raduis-5 {
   border-radius: 5;
 }
+
 .text-primary-dark {
   color: $primary-dark;
 }
@@ -317,6 +319,12 @@ $border-color-light: rgba(192, 192, 192, 0.664);
 .b-t-1 {
   border-width: 1 0 0 0;
   border-color: $border-color;
+}
+
+.b-b-primary {
+  border-width: 0 0 10 0;
+  border-color: $primary;
+
 }
 
 .b-thin {

@@ -12,7 +12,10 @@ registerElement('LinearProgressBar', () => Linearprogressbar);
 registerElement('CardView', () => CardView);
 
 @NgModule({
-  imports: [NativeScriptCommonModule, NativeScriptUISideDrawerModule],
+  imports: [
+    NativeScriptCommonModule,
+    NativeScriptUISideDrawerModule
+  ],
   declarations: [IconComponent, TextFieldComponent],
   exports: [
     IconComponent,

@@ -32,4 +32,7 @@ export class Loader {
     }
     return Loader._default;
   }
+  public static set default(value: Loader) {
+    Loader._default = value;
+  }
 }
