@@ -9,3 +9,10 @@ export interface ISnappedPoint {
   originalIndex: number;
   placeId: string;
 }
+
+export function stringifyCoordinates(coordinate: {
+  longitude: number;
+  latitude: number;
+}) {
+  return `${coordinate.latitude},${coordinate.longitude}`.trim();
+}

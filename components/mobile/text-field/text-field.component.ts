@@ -51,6 +51,7 @@ export class TextFieldComponent implements ControlValueAccessor {
   @Input() editable = true;
   @Input() autocorrect: boolean;
   @Input() maxLength: number;
+  @Input() minLength: number;
   @Input() keyboardType: KeyboardType;
   @Input() returnKeyType: ReturnKeyType;
   @Input() customTextFieldClass = '';
@@ -59,6 +60,7 @@ export class TextFieldComponent implements ControlValueAccessor {
   @Output() textFieldFocus = new EventEmitter<any>();
   @Output() textFieldBlur = new EventEmitter<any>();
   propagateChange(value) {
+    console.log('Property changed to :' + value);
     // this.textField.nativeElement.text = value;
   }
   constructor() {}
@@ -68,8 +70,10 @@ export class TextFieldComponent implements ControlValueAccessor {
     this.textValue = textField.text;
   }
   writeValue(obj: any): void {
+    console.log('Writing value :' + obj);
     if (typeof obj !== 'undefined') {
       this.textValue = obj as string;
+      this.textField.nativeElement.text = this.textValue;
     } else {
       this.textValue = null;
       this.textField.nativeElement.text = null;

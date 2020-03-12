@@ -22,7 +22,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
   `
 })
 export class IconComponent {
-  public customStyle: string;
+  public customStyle = '';
   public color = '';
   @Input() name: string;
   @Input() rotate = 0;

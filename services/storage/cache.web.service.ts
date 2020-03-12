@@ -3,7 +3,7 @@ import {
     HttpResponse,
     HttpRequest
 } from '@angular/common/http';
-import { ICacheService } from './i.cache.service';
+import { ICacheService } from './interfaces/i.cache.service';
 
 export class CacheService implements ICacheService {
     private cache: Cache;

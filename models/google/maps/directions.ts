@@ -1,6 +1,6 @@
 import { IPosition } from './position';
 
-export interface IRoute {
+export interface IMapRoute {
   summary: string;
   bounds: IBounds;
   distance?: { text: string; value: number };

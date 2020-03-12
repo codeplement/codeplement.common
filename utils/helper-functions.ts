@@ -14,19 +14,18 @@ export async function isOnline(host?: string): Promise<boolean> {
     await fetch(host || 'http://www.google.com');
     return true;
   } catch (e) {
-    return await new Promise((res, rej) => {
-      onlineTrials++;
-      const val = setTimeout(async () => {
-        res(await isOnline(host));
-        if (onlineTrials >= 10) {
-          window.clearTimeout(val);
-          rej(false);
-        }
-      }, 500);
-    });
+    onlineTrials++;
+    if (onlineTrials <= 10) {
+      return await isOnline(host);
+    } else {
+      return false;
+    }
   }
 }
-
+export function isEmail(email) {
+  var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
 export function stringWithVersion(version: string, value: string): string {
   return `${value}@${version}`;
 }

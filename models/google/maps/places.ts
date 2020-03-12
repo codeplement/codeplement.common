@@ -7,6 +7,7 @@ export interface IPlacePredilection {
 }
 
 export interface IPlace extends IPosition {
+  name?: string;
   phoneNumber: string;
   formattedAddress: string;
   data: string;

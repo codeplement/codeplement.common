@@ -1,4 +1,4 @@
-import { ICacheService } from './i.cache.service';
+import { ICacheService } from './interfaces/i.cache.service';
 import { HttpResponse, HttpRequest } from '@angular/common/http';
 
 export class CacheService implements ICacheService {

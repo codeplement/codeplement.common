@@ -36,6 +36,7 @@
       (returnPress)="returnPress.emit($event)"
       [autocorrect]="autocorrect"
       [maxLength]="maxLength || 255"
+      [minLength]="minLength || 0"
       (focus)="textFieldFocus.emit($event)"
       (blur)="textFieldBlur.emit($event)"
       [class]="customTextFieldClass"

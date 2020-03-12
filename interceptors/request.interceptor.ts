@@ -11,42 +11,31 @@ import {
 import {
   JwtHelperService,
   GenericSubjects,
-  PendingRequestService
+  PendingRequestService,
+  OnlineService
 } from '@root/services';
 import { APP_CONFIG, IAppConfig } from '@root/config/app.config';
-import { Observable, from } from 'rxjs';
+import { Observable, from, EMPTY } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { parse } from 'url';
-import { AuthService } from '@root/services';
-import { CacheStorageService } from '@root/services/storage';
+import { ICacheStorageService } from '@root/services/storage/interfaces';
 import { stringWithVersion, isOnline } from '@root/utils';
+import { CacheStorageProvider } from '@root/modules/providers.common';
+import { BaseInterceptor } from './base.interceptor';
 
 @Injectable()
-export class RequestInterceptor implements HttpInterceptor {
-  unCachableRoutes: Array<string | RegExp>;
+export class RequestInterceptor extends BaseInterceptor
+  implements HttpInterceptor {
   constructor(
     @Inject(APP_CONFIG) private config: IAppConfig,
-    private cacheStorage: CacheStorageService,
+    @Inject(CacheStorageProvider) private cacheStorage: ICacheStorageService,
     private pendingRequestService: PendingRequestService,
-    private authService: AuthService,
+    private _onlineService: OnlineService,
     protected genericSubjects: GenericSubjects,
     private location: Location
   ) {
+    super();
     this.unCachableRoutes = config.cacheConfig.unCachableRoutes;
-  }
-
-  isUnCachableRoutes(request: HttpRequest<any>): boolean {
-    const url = request.url;
-
-    return (
-      this.unCachableRoutes.findIndex(route =>
-        typeof route === 'string'
-          ? route === url
-          : route instanceof RegExp
-          ? route.test(url)
-          : false
-      ) > -1
-    );
   }
 
   async handleInterception(
@@ -56,26 +45,31 @@ export class RequestInterceptor implements HttpInterceptor {
     // Handle sync for post request
     const requestUrl = parse(request.url, false, true);
 
-    const value = await isOnline(requestUrl.host);
-    if (value) {
-      return next
-        .handle(request)
-        .pipe(
-          tap(
-            event => this.handleResponse(request, event),
-            error => this.handleResponse(request, error)
-          )
-        )
-        .toPromise();
-    } else {
-      if (request.method.toLowerCase() === 'get') {
-        return this.handleGetRequest(request);
-      } else {
-        // TODO
-        return this.handleGetRequest(request);
-        // return this.handleOtherRequest(request);
-      }
-    }
+    return this._onlineService
+      .isOnline()
+      .toPromise()
+      .then(value => {
+        if (value) {
+          return next
+            .handle(request)
+            .pipe(
+              tap(
+                event => this.handleResponse(request, event),
+                error => this.handleResponse(request, error)
+              )
+            )
+            .toPromise();
+        } else {
+          return EMPTY.toPromise();
+          // if (request.method.toLowerCase() === 'get') {
+          //   return this.handleGetRequest(request);
+          // } else {
+          //   // TODO
+          //   return this.handleGetRequest(request);
+          //   // return this.handleOtherRequest(request);
+          // }
+        }
+      });
   }
   async handleOtherRequest(request: HttpRequest<any>) {
     const requestUrl = parse(request.url, false, true);

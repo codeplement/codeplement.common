@@ -10,14 +10,13 @@ import { APP_CONFIG, IAppConfig } from '@root/config/app.config';
 import { Observable, from, EMPTY } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { parse } from 'url';
+import { BaseInterceptor } from './base.interceptor';
 
 @Injectable()
-export class JwtInterceptor implements HttpInterceptor {
+export class JwtInterceptor extends BaseInterceptor implements HttpInterceptor {
   getToken: () => string | null | Promise<string | null>;
   headerName: string;
   authScheme: string;
-  appDomains: Array<string | RegExp>;
-  anonymousRoutes: Array<string | RegExp>;
   throwNoTokenError: boolean;
   continueIfTokenExpired: boolean;
 
@@ -25,6 +24,7 @@ export class JwtInterceptor implements HttpInterceptor {
     @Inject(APP_CONFIG) config: IAppConfig,
     private jwtHelper: JwtHelperService
   ) {
+    super();
     this.getToken = config.authorization.getToken || (() => null);
     this.headerName =
       config.authorization.authorizationHeaderName || 'Authorization';
@@ -37,35 +37,6 @@ export class JwtInterceptor implements HttpInterceptor {
     this.anonymousRoutes = config.authorization.anonymousRoutes || [];
     this.throwNoTokenError = config.authorization.throwNoTokenError || false;
     this.continueIfTokenExpired = config.authorization.continueIfTokenExpired;
-  }
-
-  isAppDomain(request: HttpRequest<any>): boolean {
-    const requestUrl: any = parse(request.url, false, true);
-
-    return (
-      requestUrl.host === null ||
-      this.appDomains.findIndex(domain =>
-        typeof domain === 'string'
-          ? domain === requestUrl.host
-          : domain instanceof RegExp
-          ? domain.test(requestUrl.host)
-          : false
-      ) > -1
-    );
-  }
-
-  isAnonymousRoute(request: HttpRequest<any>): boolean {
-    const url = request.url;
-
-    return (
-      this.anonymousRoutes.findIndex(route =>
-        typeof route === 'string'
-          ? route === url
-          : route instanceof RegExp
-          ? route.test(url)
-          : false
-      ) > -1
-    );
   }
 
   handleInterception(
@@ -82,7 +53,8 @@ export class JwtInterceptor implements HttpInterceptor {
     }
 
     tokenIsExpired = this.jwtHelper.isTokenExpired(token);
-
+    console.log(tokenIsExpired);
+    console.log(token);
     if (tokenIsExpired && this.continueIfTokenExpired) {
       request = request.clone();
     } else if (tokenIsExpired && !this.continueIfTokenExpired) {

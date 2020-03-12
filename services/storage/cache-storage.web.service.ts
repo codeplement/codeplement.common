@@ -4,7 +4,7 @@ import {
     HttpRequest
 } from '@angular/common/http';
 import { CacheService } from './cache.web.service';
-import { ICacheStorageService, ICacheService } from './i.cache.service';
+import { ICacheStorageService, ICacheService } from './interfaces/i.cache.service';
 
 @Injectable()
 export class CacheStorageService implements ICacheStorageService {

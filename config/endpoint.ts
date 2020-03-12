@@ -1,5 +1,6 @@
 export interface IEndPoint {
-    serviceName: string;
-    servicePath: string;
-    version: string;
+  serviceHost: string;
+  serviceName: string;
+  servicePath: string;
+  version: string;
 }

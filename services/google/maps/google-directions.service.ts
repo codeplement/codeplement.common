@@ -2,7 +2,7 @@ import { DIRECTION_API_URL } from './google-maps-static';
 import { GoogleService } from '../google.service';
 import { IPlace } from '@root/models';
 import { IPosition } from '@root/models';
-import { IRoute } from '@root/models';
+import { IMapRoute } from '@root/models';
 import { Polyline } from './google-polyline';
 
 export class GoogleDirections extends GoogleService {
@@ -11,11 +11,11 @@ export class GoogleDirections extends GoogleService {
   }
 
   public async getDirections(
-    origin: IPlace,
-    destination: IPlace,
+    origin: IPosition,
+    destination: IPosition,
     sensor = true,
     travelMode = 'DRIVING'
-  ): Promise<IRoute[]> {
+  ): Promise<IMapRoute[]> {
     const requestUrl = `${DIRECTION_API_URL}?origin=${this.stringifyCoordinates(
       origin
     )}&destination=${this.stringifyCoordinates(
@@ -35,7 +35,7 @@ export class GoogleDirections extends GoogleService {
           polyline: Polyline.decode(r.overview_polyline.points).map(
             p => ({ latitude: p[0], longitude: p[1] } as IPosition)
           )
-        } as IRoute)
+        } as IMapRoute)
     );
   }
 }

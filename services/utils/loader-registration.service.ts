@@ -3,27 +3,27 @@ import { PartialObserver } from 'rxjs';
 import { Loader } from './loader.service';
 @Injectable()
 export class LoaderRegistrationService {
-  readonly loaders: {
+  static readonly loaders: {
     [key: string]: Loader;
   } = {};
   constructor() {}
   register(name: string, observer: PartialObserver<boolean>) {
-    const loader = this.loaders[name];
+    const loader = LoaderRegistrationService.loaders[name];
     if (loader == null) {
-      this.loaders[name] = new Loader(name, observer);
+      LoaderRegistrationService.loaders[name] = new Loader(name, observer);
     } else {
       loader.addSubscription(observer);
     }
   }
   unregister(name): void {
-    const loader = this.loaders[name];
+    const loader = LoaderRegistrationService.loaders[name];
     if (loader) {
       loader.unSubscribe();
-      delete this.loaders[name];
+      delete LoaderRegistrationService.loaders[name];
     }
   }
   get(name: string): Loader {
-    const loader = this.loaders[name];
+    const loader = LoaderRegistrationService.loaders[name];
     if (loader != null) {
       return loader;
     }

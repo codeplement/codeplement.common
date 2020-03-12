@@ -1,15 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, EMPTY } from 'rxjs';
 import { HttpOptions } from '../../models/utils';
 import { KeyValue } from '@angular/common';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, delay, timeout } from 'rxjs/operators';
 import { MessageService } from './message.service';
 import { Loader } from './loader.service';
-import { ILocalStorageService } from '@root/services';
+import { ILocalStorageService } from '@root/services/storage/interfaces';
 
 export abstract class HttpService {
   private _httpOptions: HttpOptions;
-  protected abstract get loader(): Loader;
 
   constructor(
     protected http: HttpClient,
@@ -28,6 +27,12 @@ export abstract class HttpService {
     });
   }
 
+  protected resultMapper: <T>(result: T) => T = res => res;
+
+  protected errorDetector: (resultOrError) => any = res => res;
+
+  protected abstract get loader(): Loader;
+
   protected set httpOptions(value: HttpOptions) {
     this._httpOptions = value;
   }
@@ -35,6 +40,8 @@ export abstract class HttpService {
   protected get httpOptions() {
     return this._httpOptions;
   }
+
+  protected abstract errorParser(err: any): Error[];
 
   protected get<T>(
     path: string,
@@ -50,7 +57,7 @@ export abstract class HttpService {
       .pipe(
         map(res => {
           this.loader.hide();
-          return res;
+          return this.resultMapper<T>(this.errorDetector(res));
         }),
         catchError(this.errorHandler<T>())
       );
@@ -72,7 +79,7 @@ export abstract class HttpService {
       .pipe(
         map(res => {
           this.loader.hide();
-          return res;
+          return this.resultMapper<T>(this.errorDetector(res));
         }),
         catchError(this.errorHandler<T>())
       );
@@ -94,7 +101,7 @@ export abstract class HttpService {
       .pipe(
         map(res => {
           this.loader.hide();
-          return res;
+          return this.resultMapper<T>(this.errorDetector(res));
         }),
         catchError(this.errorHandler<T>())
       );
@@ -116,7 +123,7 @@ export abstract class HttpService {
       .pipe(
         map(res => {
           this.loader.hide();
-          return res;
+          return this.resultMapper<T>(this.errorDetector(res));
         }),
         catchError(this.errorHandler<T>())
       );
@@ -136,7 +143,7 @@ export abstract class HttpService {
       .pipe(
         map(res => {
           this.loader.hide();
-          return res;
+          return this.resultMapper<T>(this.errorDetector(res));
         }),
         catchError(this.errorHandler<T>())
       );
@@ -156,7 +163,7 @@ export abstract class HttpService {
       .pipe(
         map(res => {
           this.loader.hide();
-          return res;
+          return this.resultMapper<T>(this.errorDetector(res));
         }),
         catchError(this.errorHandler<T>())
       );
@@ -180,7 +187,7 @@ export abstract class HttpService {
       .pipe(
         map(res => {
           this.loader.hide();
-          return res;
+          return this.resultMapper<T>(this.errorDetector(res));
         }),
         catchError(this.errorHandler<T>())
       );
@@ -190,15 +197,25 @@ export abstract class HttpService {
     err: any,
     caught: Observable<T>
   ) => Observable<T> {
-    return (err: Error): Observable<T> => {
+    return (err: any): Observable<T> => {
       this.loader.hide();
       // TODO: send the error to remote logging infrastructure
       console.error(err); // log to console instead
       if (this.messager) {
-        this.messager.push({
-          text: err.message,
-          timeout: 5000,
-          persit: false
+        const errors = this.errorParser(err) || [];
+        if (!errors || errors.length === 0) {
+          if (Array.isArray(err)) {
+            errors.push(...err);
+          } else {
+            errors.push(err);
+          }
+        }
+        errors.forEach(e => {
+          this.messager.push({
+            text: e.message,
+            timeout: 5000,
+            persist: false
+          });
         });
       }
 
@@ -206,7 +223,7 @@ export abstract class HttpService {
       // this.log(`${op} failed: ${err.message}`);
 
       // Let the app keep running by returning an empty result.
-      return of({} as T);
+      return EMPTY;
     };
   }
 }
