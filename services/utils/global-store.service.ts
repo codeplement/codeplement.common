@@ -2,16 +2,19 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class GlobalStoreService {
-  private store: {
+  public STORE: {
     [x: string]: any;
   } = {};
   constructor() {}
 
-  get(name: string | number) {
-    return this.store[name];
+  remove(name: string | number) {
+    delete this.STORE[name];
+  }
+  get<T extends any>(name: string | number) {
+    return this.STORE[name] as T;
   }
 
   set(name: string | number, value: any) {
-    this.store[name] = value;
+    this.STORE[name] = value;
   }
 }

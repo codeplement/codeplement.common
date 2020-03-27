@@ -53,8 +53,8 @@ export class JwtInterceptor extends BaseInterceptor implements HttpInterceptor {
     }
 
     tokenIsExpired = this.jwtHelper.isTokenExpired(token);
-    console.log(tokenIsExpired);
-    console.log(token);
+    // console.log(tokenIsExpired);
+    // console.log(token);
     if (tokenIsExpired && this.continueIfTokenExpired) {
       request = request.clone();
     } else if (tokenIsExpired && !this.continueIfTokenExpired) {
@@ -74,6 +74,7 @@ export class JwtInterceptor extends BaseInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
+    // console.log('anonymous');
     if (!this.isAppDomain(request) || this.isAnonymousRoute(request)) {
       return next.handle(request);
     }

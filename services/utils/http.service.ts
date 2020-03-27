@@ -91,7 +91,6 @@ export abstract class HttpService {
     ...params: KeyValue<string, string>[]
   ): Observable<T> {
     this.loader.show();
-
     return this.http
       .post<T>(
         this.baseUrl + path,

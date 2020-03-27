@@ -8,7 +8,7 @@ export abstract class BaseInterceptor {
 
   protected isAppDomain(request: HttpRequest<any>): boolean {
     const requestUrl: any = parse(request.url, false, true);
-    console.log(requestUrl);
+    // console.log(requestUrl);
     return (
       requestUrl.host === null ||
       this.appDomains.findIndex(domain =>
@@ -26,7 +26,7 @@ export abstract class BaseInterceptor {
     return (
       this.anonymousRoutes.findIndex(route =>
         typeof route === 'string'
-          ? route === requestUrl.path
+          ? requestUrl.path.startsWith(route)
           : route instanceof RegExp
           ? route.test(requestUrl.path)
           : false
@@ -39,7 +39,7 @@ export abstract class BaseInterceptor {
     return (
       this.unCachableRoutes.findIndex(route =>
         typeof route === 'string'
-          ? route === requestUrl.path
+          ? requestUrl.path.startsWith(route)
           : route instanceof RegExp
           ? route.test(requestUrl.path)
           : false

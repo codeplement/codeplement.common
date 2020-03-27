@@ -50,6 +50,7 @@ export class RequestInterceptor extends BaseInterceptor
       .toPromise()
       .then(value => {
         if (value) {
+          // console.log(value);
           return next
             .handle(request)
             .pipe(

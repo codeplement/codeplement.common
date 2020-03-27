@@ -14,6 +14,11 @@ export interface IAuthorization {
 export interface IAppConfig {
   license: string;
   version: string;
+  contacts: {
+    support: string;
+    issue: string;
+    faq: string;
+  };
   authorization: IAuthorization;
   apiEndpoints: {
     [x: string]: IEndPoint;

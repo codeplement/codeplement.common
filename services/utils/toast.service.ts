@@ -26,13 +26,16 @@ export class ToastService extends MessageService {
     persist?: boolean;
     data?: any;
   }): void {
-    const options = (param.data || {
+    let config = {
       backgroundColor: this._theme.dangerColor,
       position: ToastPosition.BOTTOM,
       tapToDismiss: true,
       textColor: this._theme.dangerForeColor,
       yAxisOffset: 20
-    }) as ToastyOptions;
+    } as ToastyOptions;
+    const options = (param.data
+      ? Object.assign(config, this.parseConfig(param.data))
+      : config) as ToastyOptions;
     options.text = param.text;
     options.duration =
       param.persist || param.timeout > 1000
@@ -40,5 +43,35 @@ export class ToastService extends MessageService {
         : ToastDuration.SHORT;
 
     createToast(options).show();
+  }
+  parseConfig(data: any): any {
+    const config = Object.assign({}, data);
+    switch (config.backgroundColor) {
+      case 'primary':
+        config.backgroundColor = this._theme.primaryColor;
+        config.textColor = this._theme.primaryForeColor;
+        break;
+      case 'primary-dark':
+        config.backgroundColor = this._theme.primaryDarkColor;
+        config.textColor = this._theme.primaryForeColor;
+        break;
+      case 'accent':
+        config.backgroundColor = this._theme.accentColor;
+        config.textColor = this._theme.accentForeColor;
+        break;
+      case 'secondary':
+        config.backgroundColor = this._theme.secondaryColor;
+        config.textColor = this._theme.secondaryForeColor;
+        break;
+      case 'warn':
+        config.backgroundColor = this._theme.warnColor;
+        config.textColor = this._theme.warnForeColor;
+        break;
+      default:
+        config.backgroundColor = this._theme.dangerColor;
+        config.textColor = this._theme.dangerForeColor;
+        break;
+    }
+    return config;
   }
 }

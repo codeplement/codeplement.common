@@ -11,3 +11,5 @@ export * from './online.service';
 export * from './dialog.service';
 export * from './android-resources';
 export * from './global-store.service';
+export * from './mail.service';
+export * from './platform.service';
