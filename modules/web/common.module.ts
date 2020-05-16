@@ -1,7 +1,5 @@
-import 'hammerjs';
 import { CommonModule as AngularCommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -11,9 +9,8 @@ import {
   Inject,
   NgZone,
   Optional,
-  SkipSelf
+  SkipSelf,
 } from '@angular/core';
-import { MaterialModule } from './material.module';
 import { CommonProviders } from '../providers.common';
 import { cleanCache } from '../common-base.module';
 import { Providers } from '../mobile/providers';
@@ -31,30 +28,18 @@ import { ICacheStorageService } from '@root/services/storage/interfaces';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    FlexLayoutModule,
-    MaterialModule
   ],
   exports: [
     AngularCommonModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    FlexLayoutModule,
-    MaterialModule
   ],
-  schemas: [NO_ERRORS_SCHEMA]
+  schemas: [NO_ERRORS_SCHEMA],
 })
 export class CommonModule {
-  constructor(
-    @SkipSelf() parentModule: CommonModule,
-    @Inject(APP_CONFIG) config: IAppConfig,
-    @Inject(CacheStorageProvider) cacheService: ICacheStorageService,
-    genericSubjects: GenericSubjects
-  ) {
-    if (parentModule) {
-      return;
-    }
+  constructor(genericSubjects: GenericSubjects) {
+    console.log('done');
     genericSubjects.registerCommonSubjects();
-    cleanCache(config, cacheService);
   }
 }

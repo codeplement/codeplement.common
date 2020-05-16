@@ -6,13 +6,12 @@ import {
   HttpHandler,
   HttpErrorResponse,
   HttpEvent,
-  HttpInterceptor
+  HttpInterceptor,
 } from '@angular/common/http';
 import {
   JwtHelperService,
   GenericSubjects,
   PendingRequestService,
-  OnlineService
 } from '@root/services';
 import { APP_CONFIG, IAppConfig } from '@root/config/app.config';
 import { Observable, from, EMPTY } from 'rxjs';
@@ -30,7 +29,6 @@ export class RequestInterceptor extends BaseInterceptor
     @Inject(APP_CONFIG) private config: IAppConfig,
     @Inject(CacheStorageProvider) private cacheStorage: ICacheStorageService,
     private pendingRequestService: PendingRequestService,
-    private _onlineService: OnlineService,
     protected genericSubjects: GenericSubjects,
     private location: Location
   ) {
@@ -45,32 +43,29 @@ export class RequestInterceptor extends BaseInterceptor
     // Handle sync for post request
     const requestUrl = parse(request.url, false, true);
 
-    return this._onlineService
-      .isOnline()
-      .toPromise()
-      .then(value => {
-        if (value) {
-          // console.log(value);
-          return next
-            .handle(request)
-            .pipe(
-              tap(
-                event => this.handleResponse(request, event),
-                error => this.handleResponse(request, error)
-              )
+    return isOnline().then((value) => {
+      if (value) {
+        // console.log(value);
+        return next
+          .handle(request)
+          .pipe(
+            tap(
+              (event) => this.handleResponse(request, event),
+              (error) => this.handleResponse(request, error)
             )
-            .toPromise();
-        } else {
-          return EMPTY.toPromise();
-          // if (request.method.toLowerCase() === 'get') {
-          //   return this.handleGetRequest(request);
-          // } else {
-          //   // TODO
-          //   return this.handleGetRequest(request);
-          //   // return this.handleOtherRequest(request);
-          // }
-        }
-      });
+          )
+          .toPromise();
+      } else {
+        return EMPTY.toPromise();
+        // if (request.method.toLowerCase() === 'get') {
+        //   return this.handleGetRequest(request);
+        // } else {
+        //   // TODO
+        //   return this.handleGetRequest(request);
+        //   // return this.handleOtherRequest(request);
+        // }
+      }
+    });
   }
   async handleOtherRequest(request: HttpRequest<any>) {
     const requestUrl = parse(request.url, false, true);
@@ -87,7 +82,7 @@ export class RequestInterceptor extends BaseInterceptor
       const resp = new HttpResponse({
         status: 404,
         statusText: 'Aucune sauvegarde local trouvée',
-        url: 'local-cache://' + requestUrl.path
+        url: 'local-cache://' + requestUrl.path,
       });
       this.genericSubjects
         .get<HttpResponse<any>>('noDataFoundStatus$')
