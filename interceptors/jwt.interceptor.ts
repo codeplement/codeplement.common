@@ -3,7 +3,7 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpInterceptor
+  HttpInterceptor,
 } from '@angular/common/http';
 import { JwtHelperService } from '@root/services';
 import { APP_CONFIG, IAppConfig } from '@root/config/app.config';
@@ -53,8 +53,7 @@ export class JwtInterceptor extends BaseInterceptor implements HttpInterceptor {
     }
 
     tokenIsExpired = this.jwtHelper.isTokenExpired(token);
-    // console.log(tokenIsExpired);
-    // console.log(token);
+
     if (tokenIsExpired && this.continueIfTokenExpired) {
       request = request.clone();
     } else if (tokenIsExpired && !this.continueIfTokenExpired) {
@@ -64,7 +63,7 @@ export class JwtInterceptor extends BaseInterceptor implements HttpInterceptor {
         headers: request.headers.set(
           this.headerName,
           `${this.authScheme}${token}`
-        )
+        ),
       });
     }
     return next.handle(request);
@@ -74,7 +73,6 @@ export class JwtInterceptor extends BaseInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    // console.log('anonymous');
     if (!this.isAppDomain(request) || this.isAnonymousRoute(request)) {
       return next.handle(request);
     }
